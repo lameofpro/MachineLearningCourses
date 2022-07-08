@@ -63,13 +63,13 @@ Theta2_grad = zeros(size(Theta2));
 %
 
 % Part 1
-for(i = 1:m)
-  for(k = 1:num_labels)
+% Determine the h(x) =a^3;
+h1 = sigmoid([ones(m, 1) X] * Theta1');
+h2 = sigmoid([ones(m, 1) h1] * Theta2');
 
-  end
-end
-
-
+% Convert y into onehot code
+reorderY = recodeVector(y, num_labels);
+J = sum(sum(-reorderY.*log(h2) - (1 - reorderY).*log(1 - h2)))/m;
 
 
 
