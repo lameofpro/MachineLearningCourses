@@ -64,15 +64,27 @@ Theta2_grad = zeros(size(Theta2));
 
 % Part 1
 % Determine the h(x) =a^3;
-h1 = sigmoid([ones(m, 1) X] * Theta1');
-h2 = sigmoid([ones(m, 1) h1] * Theta2');
+z_2 = [ones(m, 1) X] * Theta1';
+a_2 = sigmoid(z_2);
+z_3 = [ones(m, 1) a_2] * Theta2';
+a_3 = sigmoid(z_3);
 
 % Convert y into onehot code
 reorderY = recodeVector(y, num_labels);
-J = sum(sum(-reorderY.*log(h2) - (1 - reorderY).*log(1 - h2)))/m;
+J_1 = sum(sum(-reorderY.*log(a_3) - (1 - reorderY).*log(1 - a_3)))/m;
 
+% Don't regularize the bias term, i.e. not the first column of Theta in each layer
+reg = (sum(sum(Theta1(:,2:size(Theta1,2)).^2)) + sum(sum(Theta2(:,2:size(Theta2,2)).^2)))*(lambda/(2*m));
+J = J_1 + reg;
 
+% Part 2
 
+q_3 = a_3 - reorderY;
+q_2 = q_3 * Theta2 .* sigmoidGradient([ones(m, 1) z_2]);
+delta_2 = q_3'*[ones(m,1) a_2];
+delta_1 = q_2(:,2:hidden_layer_size+1)'*[ones(m,1) X];
+Theta2_grad = delta_2 / m;
+Theta1_grad = delta_1 / m;
 
 
 
