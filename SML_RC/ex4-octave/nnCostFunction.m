@@ -83,8 +83,8 @@ q_3 = a_3 - reorderY;
 q_2 = q_3 * Theta2 .* sigmoidGradient([ones(m, 1) z_2]);
 delta_2 = q_3'*[ones(m,1) a_2];
 delta_1 = q_2(:,2:hidden_layer_size+1)'*[ones(m,1) X];
-Theta2_grad = delta_2 / m;
-Theta1_grad = delta_1 / m;
+Theta2_grad = delta_2 / m + [zeros(size(Theta2, 1),1) Theta2(:, 2:size(Theta2,2))]*(lambda/m);
+Theta1_grad = delta_1 / m + [zeros(size(Theta1, 1),1) Theta1(:, 2:size(Theta1,2))]*(lambda/m);
 
 
 
